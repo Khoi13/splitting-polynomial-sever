@@ -30,60 +30,53 @@ const handleResult = ({ firstCo = '1', secondCo = NaN, freeCo = NaN }) => {
         };
     }
     else {
+        const dataOut = {
+            statusCode: 200,
+            status: 'SUCCESS',
+            message: 'Success!',
+            request: {
+                firstCo,
+                secondCo,
+                freeCo,
+            },
+            result: {
+                x: NaN,
+                y: NaN,
+            },
+        };
         const multiple = firstCo * freeCo;
         const sum = secondCo;
         const isSumPos = sum > 0;
+        const isMulPos = multiple > 0;
         let i = isSumPos ? 1 : -1;
-        while (i <= Math.round(Math.abs(multiple) / 2)) {
-            if (i * (sum - i) === multiple) {
-                return {
-                    statusCode: 200,
-                    status: 'SUCCESS',
-                    message: 'Success!',
-                    request: {
-                        firstCo,
-                        secondCo,
-                        freeCo,
-                    },
-                    result: {
-                        x: i,
-                        y: sum - i,
-                    },
-                };
+        if (isMulPos) {
+            while (i <= Math.round(multiple / 2) && i >= -Math.round(multiple / 2)) {
+                if (i * (sum - i) === multiple) {
+                    dataOut.result.x = i;
+                    dataOut.result.y = sum - i;
+                    return dataOut;
+                }
+                isSumPos ? i++ : i--;
             }
-            isSumPos ? i++ : i--;
         }
-        if (sum == multiple + 1) {
-            return {
-                statusCode: 200,
-                status: 'SUCCESS',
-                message: 'Success!',
-                request: {
-                    firstCo,
-                    secondCo,
-                    freeCo,
-                },
-                result: {
-                    x: 1,
-                    y: multiple / 1,
-                },
-            };
+        else {
+            while (i >= Math.round((multiple + 1) / 2) && i <= -Math.round((multiple + 1) / 2)) {
+                if (i * (sum - i) === multiple) {
+                    dataOut.result.x = i;
+                    dataOut.result.y = sum - i;
+                    return dataOut;
+                }
+                isSumPos ? i++ : i--;
+            }
         }
-        else if (sum == multiple - 1) {
-            return {
-                statusCode: 200,
-                status: 'SUCCESS',
-                message: 'Success!',
-                request: {
-                    firstCo,
-                    secondCo,
-                    freeCo,
-                },
-                result: {
-                    x: -1,
-                    y: multiple / -1,
-                },
-            };
+        let j = -1;
+        while (j <= 1) {
+            if (j * (sum - j) === multiple) {
+                dataOut.result.x = j;
+                dataOut.result.y = sum - j;
+                return dataOut;
+            }
+            j++;
         }
     }
     return {
