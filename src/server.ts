@@ -16,53 +16,106 @@ type DataIn = {
     freeCo: any;
 };
 
-const handleResult = ({ firstCo = 1, secondCo = NaN, freeCo = NaN }: DataIn) => {
-    const dataOut = {
-        status: 403,
-        message: 'Cannot split',
-        result: {
-            firstCo,
-            secondCo,
-            freeCo,
-            value: {
-                x: NaN,
-                y: NaN,
-            },
-        },
-    };
-
+const handleResult = ({ firstCo = '1', secondCo = NaN, freeCo = NaN }: DataIn) => {
+    const invalidField = [];
     if (!+firstCo) {
-        dataOut.message = 'Invalid firstCo';
-    } else if (!+secondCo) {
-        dataOut.message = 'Invalid secondCo';
-    } else if (!+freeCo) {
-        dataOut.message = 'Invalid freeCo';
+        invalidField.push('firstCo');
+    }
+    if (!+secondCo) {
+        invalidField.push('SecondCo');
+    }
+    if (!+freeCo) {
+        invalidField.push('freeCo');
+    }
+
+    if (invalidField.length) {
+        return {
+            statusCode: 400,
+            status: 'INVALID',
+            message: 'The request data is invalid.',
+            request: {
+                firstCo,
+                secondCo,
+                freeCo,
+            },
+            invalidField,
+        };
     } else {
         const multiple = firstCo * freeCo;
         const sum = secondCo;
+
         const isSumPos = sum > 0;
         let i = isSumPos ? 1 : -1;
-        while (i <= Math.abs(multiple) || i <= multiple) {
+        while (i <= Math.round(Math.abs(multiple) / 2)) {
             if (i * (sum - i) === multiple) {
-                dataOut.status = 200;
-                dataOut.message = 'Success!';
-                dataOut.result.value.x = i;
-                dataOut.result.value.y = sum - i;
-                break;
+                return {
+                    statusCode: 200,
+                    status: 'SUCCESS',
+                    message: 'Success!',
+                    request: {
+                        firstCo,
+                        secondCo,
+                        freeCo,
+                    },
+                    result: {
+                        x: i,
+                        y: sum - i,
+                    },
+                };
             }
             isSumPos ? i++ : i--;
         }
+
+        if (sum == multiple + 1) {
+            return {
+                statusCode: 200,
+                status: 'SUCCESS',
+                message: 'Success!',
+                request: {
+                    firstCo,
+                    secondCo,
+                    freeCo,
+                },
+                result: {
+                    x: 1,
+                    y: multiple / 1,
+                },
+            };
+        } else if (sum == multiple - 1) {
+            return {
+                statusCode: 200,
+                status: 'SUCCESS',
+                message: 'Success!',
+                request: {
+                    firstCo,
+                    secondCo,
+                    freeCo,
+                },
+                result: {
+                    x: -1,
+                    y: multiple / -1,
+                },
+            };
+        }
     }
 
-    return dataOut;
+    return {
+        statusCode: 404,
+        status: 'CANNOT_SPLIT',
+        message: 'The request is valid but cannot handle.',
+        request: {
+            firstCo,
+            secondCo,
+            freeCo,
+        },
+    };
 };
-
 app.get('/', (req: Request, res: Response) => {
     const { firstCo, secondCo, freeCo } = req.query;
 
     const resData = handleResult({ firstCo, secondCo, freeCo });
 
-    res.status(resData.status).json(resData);
+    res.status(resData.statusCode).json(resData);
 });
 
 app.listen(port, () => {
