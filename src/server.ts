@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 
 const app: Express = express();
-const port = 8000;
+const port = process.env.PORT || 8001;
 
 app.use(
     express.urlencoded({
