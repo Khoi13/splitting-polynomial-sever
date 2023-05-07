@@ -2,7 +2,6 @@ import express from 'express';
 import 'dotenv/config';
 const app = express();
 const port = process.env.PORT || 8002;
-console.log(process.env.PORT);
 app.use(express.urlencoded({
     extended: true,
 }));
