@@ -81,7 +81,7 @@ const handleResult = ({ firstCo = '1', secondCo = NaN, freeCo = NaN }) => {
         }
     }
     return {
-        statusCode: 404,
+        statusCode: 200,
         status: 'CANNOT_SPLIT',
         message: 'The request is valid but cannot handle.',
         request: {
