@@ -94,6 +94,7 @@ const handleResult = ({ firstCo = '1', secondCo = NaN, freeCo = NaN }) => {
 app.get('/', (req, res) => {
     const { firstCo, secondCo, freeCo } = req.query;
     const resData = handleResult({ firstCo, secondCo, freeCo });
+    res.header('Access-Control-Allow-Origin', '*');
     res.status(resData.statusCode).json(resData);
 });
 app.listen(port, () => {
