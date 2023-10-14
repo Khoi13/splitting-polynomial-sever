@@ -52,7 +52,6 @@ const handleResult = ({ firstCo = '1', secondCo = NaN, freeCo = NaN }) => {
         let i = isSumPos ? 1 : -1;
         if (isMulPos) {
             while (i <= Math.round(multiple / 2) && i >= -Math.round(multiple / 2)) {
-                console.log(i, Math.round((multiple + 1) / 2));
                 if (i * (sum - i) === multiple) {
                     dataOut.result.x = i;
                     dataOut.result.y = sum - i;
@@ -63,7 +62,6 @@ const handleResult = ({ firstCo = '1', secondCo = NaN, freeCo = NaN }) => {
         }
         else {
             while (i >= Math.round((multiple - 1) / 2) && i <= -Math.round((multiple - 1) / 2)) {
-                console.log(i, Math.round((multiple + 1) / 2));
                 if (i * (sum - i) === multiple) {
                     dataOut.result.x = i;
                     dataOut.result.y = sum - i;
