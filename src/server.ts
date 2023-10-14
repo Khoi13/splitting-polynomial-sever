@@ -72,7 +72,7 @@ const handleResult = ({ firstCo = '1', secondCo = NaN, freeCo = NaN }: DataIn) =
                 isSumPos ? i++ : i--;
             }
         } else {
-            while (i >= Math.round((multiple + 1) / 2) && i <= -Math.round((multiple + 1) / 2)) {
+            while (i >= Math.round((multiple - 1) / 2) && i <= -Math.round((multiple - 1) / 2)) {
                 if (i * (sum - i) === multiple) {
                     dataOut.result.x = i;
                     dataOut.result.y = sum - i;
